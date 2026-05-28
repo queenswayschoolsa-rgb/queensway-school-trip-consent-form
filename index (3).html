@@ -1,0 +1,209 @@
+
+<style>
+  :root {
+    --jg: #2D6A4F;
+    --jg-dark: #1B4332;
+    --jg-light: #D8F3DC;
+    --gold: #C9A84C;
+    --gold-light: #FFF8E7;
+  }
+  * { box-sizing: border-box; }
+  .fw { max-width: 680px; margin: 0 auto; padding: 1.5rem 0; font-family: var(--font-sans); background: white; }
+  .form-header { background: var(--jg-dark); border-radius: var(--border-radius-lg); padding: 2rem; margin-bottom: 1.5rem; color: white; text-align: center; }
+  .logo-circle { width: 80px; height: 80px; border-radius: 50%; background: white; border: 3px solid var(--gold); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; position: relative; }
+  .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: none; }
+  .logo-circle .logo-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+  .logo-circle .logo-placeholder i { font-size: 22px; color: var(--jg); }
+  .logo-circle .logo-placeholder span { font-size: 9px; color: var(--jg); font-weight: 500; }
+  #logo-upload { display: none; }
+  .school-name-text { font-size: 20px; font-weight: 600; color: white; margin: 0 0 6px; }
+  .school-tagline { font-size: 13px; color: rgba(255,255,255,0.75); margin: 0 0 14px; }
+  .trip-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--gold); border-radius: var(--border-radius-md); padding: 5px 14px; font-size: 12px; font-weight: 500; color: var(--jg-dark); margin-bottom: 10px; }
+  .form-subtitle { font-size: 13px; opacity: 0.7; margin: 0; }
+  .section { background: white; border: 0.5px solid #d0e8d8; border-radius: var(--border-radius-lg); padding: 1.5rem; margin-bottom: 1.25rem; }
+  .section-title { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: var(--jg); text-transform: uppercase; letter-spacing: 0.07em; margin: 0 0 1.25rem; border-bottom: 1.5px solid var(--jg-light); padding-bottom: 10px; }
+  .section-title i { font-size: 16px; }
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 13px; color: #444; font-weight: 500; }
+  .field input, .field select { font-size: 14px; border: 0.5px solid #c5ddc8; border-radius: var(--border-radius-md); }
+  .field input:focus, .field select:focus { outline: 2px solid var(--jg); border-color: var(--jg); }
+  .divider { border: none; border-top: 0.5px solid #e0ede3; margin: 1.25rem 0; }
+  .consent-block { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; background: #f5fbf6; border: 0.5px solid #c5ddc8; border-radius: var(--border-radius-md); margin-bottom: 8px; }
+  .consent-block input[type=checkbox] { margin-top: 2px; width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--jg); }
+  .consent-block p { font-size: 13px; color: #555; margin: 0; line-height: 1.5; }
+  .consent-block strong { color: #222; }
+  .sig-tabs { display: flex; gap: 0; margin-bottom: 12px; border: 0.5px solid #c5ddc8; border-radius: var(--border-radius-md); overflow: hidden; }
+  .sig-tab { flex: 1; padding: 9px; font-size: 13px; font-weight: 500; border: none; background: white; color: #666; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.15s, color 0.15s; }
+  .sig-tab.active { background: var(--jg); color: white; }
+  .sig-tab:not(.active):hover { background: var(--jg-light); }
+  .sig-panel { display: none; }
+  .sig-panel.active { display: block; }
+  #sig-canvas { width: 100%; height: 120px; border: 0.5px solid #c5ddc8; border-radius: var(--border-radius-md); cursor: crosshair; background: white; display: block; touch-action: none; }
+  .sig-actions { display: flex; gap: 8px; margin-top: 6px; }
+  .sig-btn { font-size: 12px; padding: 5px 12px; background: white; border: 0.5px solid #c5ddc8; border-radius: var(--border-radius-md); cursor: pointer; color: #555; display: flex; align-items: center; gap: 4px; }
+  .sig-btn:hover { border-color: var(--jg); color: var(--jg); }
+  .upload-area { border: 1.5px dashed #c5ddc8; border-radius: var(--border-radius-md); padding: 2rem; text-align: center; cursor: pointer; background: #f9fdf9; }
+  .upload-area:hover { border-color: var(--jg); background: var(--jg-light); }
+  .upload-area i { font-size: 28px; color: var(--jg); display: block; margin-bottom: 6px; }
+  .upload-area p { font-size: 13px; color: #888; margin: 0; }
+  .upload-area strong { color: var(--jg); }
+  #sig-upload-input { display: none; }
+  #sig-preview { display: none; max-height: 100px; max-width: 100%; border-radius: var(--border-radius-md); border: 0.5px solid #c5ddc8; margin-top: 8px; }
+  .sig-row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 1rem; }
+  .submit-btn { width: 100%; padding: 14px; background: var(--jg); color: white; border: none; border-radius: var(--border-radius-md); font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+  .submit-btn:hover { background: var(--jg-dark); }
+  .success-msg { display: none; text-align: center; padding: 2rem; background: var(--jg-light); border: 0.5px solid #a0d4a8; border-radius: var(--border-radius-lg); color: var(--jg-dark); }
+  .success-msg i { font-size: 36px; display: block; margin-bottom: 8px; color: var(--jg); }
+  .gold-bar { height: 4px; background: var(--gold); border-radius: 2px; margin-bottom: 1.5rem; }
+  @media (max-width: 480px) { .field-grid { grid-template-columns: 1fr; } .sig-row { grid-template-columns: 1fr; } }
+</style>
+
+<h2 class="sr-only">Queensway Early Years school trip consent form</h2>
+<div class="fw">
+
+  <div class="form-header">
+    <div class="logo-circle" onclick="document.getElementById('logo-upload').click()" title="Click to upload school logo">
+      <img id="logo-img" alt="Queensway Early Years logo" />
+      <div class="logo-placeholder" id="logo-ph">
+        <i class="ti ti-building-community" aria-hidden="true"></i>
+        <span>Add logo</span>
+      </div>
+    </div>
+    <input type="file" id="logo-upload" accept="image/*" />
+    <p class="school-name-text">Queensway Early Years</p>
+    <p class="school-tagline">Please complete the sections below carefully and submit.</p>
+    <div class="trip-badge"><i class="ti ti-bus" aria-hidden="true"></i> School Trip</div>
+    <p class="form-subtitle">Return by the deadline given by your child's class teacher.</p>
+  </div>
+  <div class="gold-bar"></div>
+
+  <div class="section">
+    <p class="section-title"><i class="ti ti-school" aria-hidden="true"></i> Student information</p>
+    <div class="field-grid">
+      <div class="field"><label for="s-fname">First name</label><input type="text" id="s-fname" placeholder="e.g. Amara" /></div>
+      <div class="field"><label for="s-lname">Last name</label><input type="text" id="s-lname" placeholder="e.g. Odhiambo" /></div>
+      <div class="field">
+        <label for="s-class">Class / Grade level</label>
+        <select id="s-class">
+          <option value="">Select class</option>
+          <option>Creche</option><option>Playgroup</option><option>PP1</option><option>PP2</option>
+          <option>Grade 1</option><option>Grade 2</option><option>Grade 3</option>
+          <option>Grade 4</option><option>Grade 5</option><option>Grade 6</option>
+          <option>Grade 7</option><option>Grade 8</option><option>Grade 9</option>
+        </select>
+      </div>
+      <div class="field"><label for="s-dob">Date of birth</label><input type="date" id="s-dob" /></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="section-title"><i class="ti ti-user" aria-hidden="true"></i> Parent / Guardian information</p>
+    <div class="field-grid">
+      <div class="field"><label for="p-fname">First name</label><input type="text" id="p-fname" placeholder="e.g. Grace" /></div>
+      <div class="field"><label for="p-lname">Last name</label><input type="text" id="p-lname" placeholder="e.g. Wanjiku" /></div>
+      <div class="field">
+        <label for="p-rel">Relationship to student</label>
+        <select id="p-rel"><option value="">Select</option><option>Mother</option><option>Father</option><option>Legal guardian</option><option>Other</option></select>
+      </div>
+      <div class="field"><label for="p-phone">Primary phone number</label><input type="tel" id="p-phone" placeholder="+254 7XX XXX XXX" /></div>
+      <div class="field"><label for="p-email">Email address</label><input type="email" id="p-email" placeholder="parent@email.com" /></div>
+      <div class="field"><label for="p-phone2">Alternate phone number</label><input type="tel" id="p-phone2" placeholder="+254 7XX XXX XXX" /></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="section-title"><i class="ti ti-phone-call" aria-hidden="true"></i> Emergency contact</p>
+    <div class="field-grid">
+      <div class="field"><label for="e-name">Full name</label><input type="text" id="e-name" placeholder="Emergency contact name" /></div>
+      <div class="field"><label for="e-rel">Relationship to student</label><input type="text" id="e-rel" placeholder="e.g. Aunt, Uncle" /></div>
+      <div class="field"><label for="e-phone">Phone number</label><input type="tel" id="e-phone" placeholder="+254 7XX XXX XXX" /></div>
+      <div class="field"><label for="e-phone2">Alternate number</label><input type="tel" id="e-phone2" placeholder="+254 7XX XXX XXX" /></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="section-title"><i class="ti ti-writing" aria-hidden="true"></i> Consent & declarations</p>
+    <div class="consent-block"><input type="checkbox" id="c-trip" /><p><strong>Trip participation.</strong> I give permission for my child to attend the school trip and confirm all information provided is accurate.</p></div>
+    <div class="consent-block"><input type="checkbox" id="c-photo" /><p><strong>Photo &amp; video consent.</strong> I consent to my child being photographed or filmed during the trip for school records, newsletters, and official school communications.</p></div>
+    <div class="consent-block"><input type="checkbox" id="c-medical" /><p><strong>Medical emergency.</strong> In the event of an emergency and I cannot be reached, I authorise the school to seek appropriate medical treatment for my child.</p></div>
+    <div class="consent-block"><input type="checkbox" id="c-rules" /><p><strong>Code of conduct.</strong> I confirm my child understands and will adhere to the school's code of conduct during the trip.</p></div>
+  </div>
+
+  <div class="section">
+    <p class="section-title"><i class="ti ti-pen" aria-hidden="true"></i> Signature</p>
+    <div class="sig-row">
+      <div class="field"><label for="p-sig">Parent / Guardian full name</label><input type="text" id="p-sig" placeholder="Type your full name" /></div>
+      <div class="field"><label for="p-date">Date</label><input type="date" id="p-date" /></div>
+    </div>
+    <p style="font-size:13px;color:#666;margin:0 0 10px;">Choose how you'd like to sign:</p>
+    <div class="sig-tabs">
+      <button class="sig-tab active" onclick="switchTab('draw')" id="tab-draw"><i class="ti ti-pencil" aria-hidden="true"></i> Draw signature</button>
+      <button class="sig-tab" onclick="switchTab('upload')" id="tab-upload"><i class="ti ti-upload" aria-hidden="true"></i> Upload signature</button>
+    </div>
+    <div class="sig-panel active" id="panel-draw">
+      <canvas id="sig-canvas" width="640" height="120"></canvas>
+      <div class="sig-actions"><button class="sig-btn" onclick="clearCanvas()"><i class="ti ti-trash" aria-hidden="true"></i> Clear</button></div>
+    </div>
+    <div class="sig-panel" id="panel-upload">
+      <div class="upload-area" onclick="document.getElementById('sig-upload-input').click()">
+        <i class="ti ti-file-upload" aria-hidden="true"></i>
+        <p><strong>Click to upload</strong> your signature image</p>
+        <p>PNG, JPG, or GIF — transparent background preferred</p>
+      </div>
+      <input type="file" id="sig-upload-input" accept="image/*" />
+      <img id="sig-preview" alt="Uploaded signature preview" />
+    </div>
+  </div>
+
+  <button class="submit-btn" onclick="handleSubmit()">Submit consent form</button>
+  <div class="success-msg" id="success">
+    <i class="ti ti-circle-check" aria-hidden="true"></i>
+    <strong>Form submitted successfully.</strong><br>Thank you! Queensway Early Years will be in touch with further trip details.
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('sig-canvas');
+const ctx = canvas.getContext('2d');
+let drawing = false, hasSig = false;
+function getPos(e) { const r = canvas.getBoundingClientRect(); const src = e.touches ? e.touches[0] : e; return { x: (src.clientX - r.left) * (canvas.width / r.width), y: (src.clientY - r.top) * (canvas.height / r.height) }; }
+canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+canvas.addEventListener('mousemove', e => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.strokeStyle = '#1B4332'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke(); hasSig = true; });
+canvas.addEventListener('mouseup', () => drawing = false);
+canvas.addEventListener('mouseleave', () => drawing = false);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, { passive: false });
+canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.strokeStyle = '#1B4332'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke(); hasSig = true; }, { passive: false });
+canvas.addEventListener('touchend', () => drawing = false);
+function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); hasSig = false; }
+function switchTab(tab) {
+  document.querySelectorAll('.sig-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sig-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+document.getElementById('sig-upload-input').addEventListener('change', function() {
+  const file = this.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { const img = document.getElementById('sig-preview'); img.src = e.target.result; img.style.display = 'block'; };
+  reader.readAsDataURL(file);
+});
+document.getElementById('logo-upload').addEventListener('change', function() {
+  const file = this.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { const img = document.getElementById('logo-img'); img.src = e.target.result; img.style.display = 'block'; document.getElementById('logo-ph').style.display = 'none'; };
+  reader.readAsDataURL(file);
+});
+function handleSubmit() {
+  const required = ['s-fname','s-lname','s-class','p-fname','p-lname','p-phone','e-name','e-phone','p-sig','p-date'];
+  let missing = false;
+  required.forEach(id => { const el = document.getElementById(id); if (!el.value.trim()) { el.style.outline = '2px solid #c0392b'; missing = true; } else el.style.outline = ''; });
+  ['c-trip','c-rules'].forEach(id => { if (!document.getElementById(id).checked) missing = true; });
+  const activeTab = document.querySelector('.sig-tab.active').id;
+  if (activeTab === 'tab-draw' && !hasSig) missing = true;
+  if (activeTab === 'tab-upload' && !document.getElementById('sig-preview').src.startsWith('data')) missing = true;
+  if (missing) { alert('Please fill in all required fields, check the required consent boxes, and provide your signature.'); return; }
+  document.querySelector('.submit-btn').style.display = 'none';
+  document.getElementById('success').style.display = 'block';
+}
+</script>
